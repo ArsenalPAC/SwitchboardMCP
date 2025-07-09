@@ -2,11 +2,17 @@
 
 <!-- Badges -->
 ![Arsenal PAC](https://img.shields.io/badge/Arsenal%20PAC-⚔️-FF6B6B?style=for-the-badge)
-[![smithery badge](https://smithery.ai/badge/@ArsenalPAC/switchboardmcp)](https://smithery.ai/server/@ArsenalPAC/switchboardmcp)
-![GitHub Downloads](https://img.shields.io/github/downloads/ArsenalPAC/SwitchboardMCP/total)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
+![GitHub Release](https://img.shields.io/github/v/release/ArsenalPAC/SwitchboardMCP?style=for-the-badge)
+![Current Version](https://img.shields.io/github/package-json/v/ArsenalPAC/SwitchboardMCP?style=for-the-badge)
+
+[![smithery badge](https://smithery.ai/badge/@ArsenalPAC/switchboardmcp)](https://smithery.ai/server/@ArsenalPAC/switchboardmcp)
+![NPM Downloads](https://img.shields.io/npm/dt/switchboard-mcp-server)
+![GitHub Downloads](https://img.shields.io/github/downloads/ArsenalPAC/SwitchboardMCP/total)
+
 ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white&style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white&style=for-the-badge)
+
 
 ## 🎯 Purpose
 
