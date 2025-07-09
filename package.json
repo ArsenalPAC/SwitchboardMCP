@@ -1,24 +1,54 @@
 {
-  "name": "switchboard",
-  "version": "v1",
-  "description": "MCP Server generated from OpenAPI spec for switchboard",
-  "private": true,
+  "name": "switchboard-mcp-server",
+  "version": "1.0.0",
+  "description": "Model Context Protocol (MCP) server for Switchboard API - enables AI assistants to access broadcast messaging, email campaigns, and contact management for progressive campaigns",
   "type": "module",
   "main": "build/index.js",
+  "bin": {
+    "switchboard-mcp-server": "build/index.js"
+  },
   "files": [
     "build",
-    "src"
+    "README.md",
+    "smithery.yaml"
   ],
   "scripts": {
     "start": "node build/index.js",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "prestart": "npm run build",
+    "prepublishOnly": "npm run build",
     "start:http": "node build/index.js --transport=streamable-http"
   },
   "engines": {
     "node": ">=20.0.0"
   },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "switchboard",
+    "broadcast-messaging",
+    "email-campaigns",
+    "progressive-campaigns",
+    "political-tech",
+    "api-integration",
+    "ai-assistant",
+    "claude"
+  ],
+  "author": {
+    "name": "Arsenal PAC",
+    "email": "tech@arsenalpac.org",
+    "url": "https://arsenaldemocracy.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArsenalPAC/SwitchboardMCP.git"
+  },
+  "homepage": "https://github.com/ArsenalPAC/SwitchboardMCP#readme",
+  "bugs": {
+    "url": "https://github.com/ArsenalPAC/SwitchboardMCP/issues"
+  },
+  "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.10.0",
     "axios": "^1.9.0",
