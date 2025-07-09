@@ -1,6 +1,6 @@
 {
   "name": "switchboard-mcp-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Model Context Protocol (MCP) server for Switchboard API - enables AI assistants to access broadcast messaging, email campaigns, and contact management for progressive campaigns",
   "type": "module",
   "main": "build/index.js",
