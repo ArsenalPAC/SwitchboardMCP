@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> aa6feecce695c5147fc11a81b1236e4b51536903
 /**
  * StreamableHTTP server setup for HTTP-based MCP communication using Hono
  */
@@ -245,4 +248,8 @@ export async function setupStreamableHttpServer(server: Server, port = 3000) {
   });
   
   return app;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> aa6feecce695c5147fc11a81b1236e4b51536903
