@@ -1,6 +1,7 @@
 # Switchboard MCP Server
 
-A Model Context Protocol (MCP) server that enables AI assistants to access the [Switchboard](https://oneswitchboard.com) API for broadcast messaging, email campaigns, and contact management.  
+A Model Context Protocol (MCP) server that enables AI assistants to access the [Switchboard](https://oneswitchboard.com) API for broadcast messaging, email campaigns, and contact management.
+
 Originally generated using [openapi-mcp-generator](https://github.com/harsha-iiiv/openapi-mcp-generator) with the [Switchboard OpenAPI specification](https://api.oneswitchboard.com/v1/docs) (as of 7/9/2025).
 
 ### Disclaimer
