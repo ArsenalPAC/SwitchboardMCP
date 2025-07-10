@@ -935,20 +935,29 @@ async function main() {
   // Check command line arguments to determine transport
   const args = process.argv.slice(2);
   const transportIndex = args.findIndex(arg => arg === '--transport' || arg === '-t');
-  const transport = transportIndex !== -1 && args[transportIndex + 1] ? args[transportIndex + 1] : 'stdio';
+  let transport = transportIndex !== -1 && args[transportIndex + 1] ? args[transportIndex + 1] : 'stdio';
+  
+  // Auto-detect Smithery deployment
+  // Smithery sets PORT environment variable and expects streamable-http
+  const isSmitheryDeployment = process.env.PORT && !process.env.MCP_TRANSPORT;
+  if (isSmitheryDeployment) {
+    console.error('Detected Smithery deployment environment, using streamable-http transport');
+    transport = 'streamable-http';
+  }
 
   if (transport === 'streamable-http') {
     // Set up StreamableHTTP transport
     try {
-      await setupStreamableHttpServer(server, 3000);
+      const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+      await setupStreamableHttpServer(server, port);
     } catch (error) {
       console.error("Error setting up StreamableHTTP server:", error);
       process.exit(1);
     }
   } else {
     // Default to stdio transport (for Smithery and standard MCP usage)
-    const transport = new StdioServerTransport();
-    await server.connect(transport);
+    const stdioTransport = new StdioServerTransport();
+    await server.connect(stdioTransport);
     console.error(`MCP server running on stdio transport`);
   }
 }
