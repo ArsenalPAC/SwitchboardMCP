@@ -19,7 +19,8 @@
     "typecheck": "tsc --noEmit",
     "prestart": "npm run build",
     "prepublishOnly": "npm run build",
-    "start:http": "node build/index.js --transport=streamable-http"
+    "start:http": "node build/index.js --transport=streamable-http",
+    "release": "bash scripts/release.sh"
   },
   "engines": {
     "node": ">=20.0.0"

@@ -165,6 +165,12 @@ npm start
 npx @modelcontextprotocol/inspector
 ```
 
+## 🚀 Automated Releases
+
+This repository is configured for automated NPM publishing. When you create a new GitHub release or push a version tag, the package is automatically published to NPM.
+
+See [Release Process Documentation](docs/RELEASE_PROCESS.md) for setup and usage instructions.
+
 ## 🤝 Contributing
 
 Arsenal PAC welcomes contributions! Please feel free to submit a Pull Request.
