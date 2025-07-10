@@ -15,7 +15,8 @@ import {
   ListToolsRequestSchema,
   type Tool,
   type CallToolResult,
-  type CallToolRequest
+  type CallToolRequest,
+  InitializeRequestSchema
 } from "@modelcontextprotocol/sdk/types.js";
 import { setupStreamableHttpServer } from "./streamable-http.js";
 
@@ -464,12 +465,36 @@ const securitySchemes =   {
 
 // Add handler for configuration requests
 server.setRequestHandler(ListToolsRequestSchema, async () => {
+  // Return tools without requiring authentication
+  // This allows Smithery to scan tools during deployment
   const toolsForClient: Tool[] = Array.from(toolDefinitionMap.values()).map(def => ({
     name: def.name,
     description: def.description,
     inputSchema: def.inputSchema
   }));
   return { tools: toolsForClient };
+});
+
+// Add initialization handler
+server.setRequestHandler(InitializeRequestSchema, async (request) => {
+  console.error('Initialize request received:', JSON.stringify(request.params));
+  
+  // Check if required configuration is present
+  const hasConfig = process.env['BASIC_USERNAME_HTTPBASIC'] && process.env['BASIC_PASSWORD_HTTPBASIC'];
+  if (!hasConfig) {
+    console.error('Warning: No authentication credentials configured. API calls will fail.');
+  }
+  
+  return {
+    protocolVersion: "2024-11-05",
+    capabilities: { 
+      tools: {}
+    },
+    serverInfo: {
+      name: SERVER_NAME,
+      version: SERVER_VERSION
+    }
+  };
 });
 
 
@@ -994,13 +1019,20 @@ function getZodSchemaFromJsonSchema(jsonSchema: any, toolName: string): z.ZodTyp
     }
     try {
         const zodSchemaString = jsonSchemaToZod(jsonSchema);
-        const zodSchema = eval(zodSchemaString);
-        if (typeof zodSchema?.parse !== 'function') { 
-            throw new Error('Eval did not produce a valid Zod schema.'); 
+        // Use a safer approach for Smithery deployment
+        try {
+            const zodSchema = eval(zodSchemaString);
+            if (typeof zodSchema?.parse !== 'function') { 
+                throw new Error('Eval did not produce a valid Zod schema.'); 
+            }
+            return zodSchema as z.ZodTypeAny;
+        } catch (evalError) {
+            console.error(`Failed to evaluate Zod schema for '${toolName}', using passthrough:`, evalError);
+            // Return a permissive schema that allows any object
+            return z.object({}).passthrough();
         }
-        return zodSchema as z.ZodTypeAny;
     } catch (err: any) {
-        console.error(`Failed to generate/evaluate Zod schema for '${toolName}':`, err);
+        console.error(`Failed to generate Zod schema for '${toolName}', using passthrough:`, err);
         return z.object({}).passthrough();
     }
 }
