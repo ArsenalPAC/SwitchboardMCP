@@ -80,8 +80,7 @@ const server = new Server(
     },
     { 
         capabilities: { 
-            tools: {},
-            config: true
+            tools: {}
         } 
     }
 );
