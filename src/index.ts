@@ -66,20 +66,22 @@ const configSchema = {
             examples: ["sk_your_secret_key_here"]
         }
     },
-    required: ["account_id", "secret_key"]
+    required: ["account_id", "secret_key"],
+    additionalProperties: false
 };
 
 /**
  * MCP Server instance
  */
 const server = new Server(
-    { name: SERVER_NAME, version: SERVER_VERSION },
+    { 
+        name: SERVER_NAME, 
+        version: SERVER_VERSION 
+    },
     { 
         capabilities: { 
             tools: {},
-            config: {
-                schema: configSchema
-            }
+            config: true
         } 
     }
 );
@@ -461,7 +463,7 @@ const securitySchemes =   {
     }
   };
 
-
+// Add handler for configuration requests
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   const toolsForClient: Tool[] = Array.from(toolDefinitionMap.values()).map(def => ({
     name: def.name,
@@ -481,7 +483,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
   }
   return await executeApiTool(toolName, toolDefinition, toolArgs ?? {}, securitySchemes);
 });
-
 
 
 /**
@@ -681,6 +682,11 @@ async function executeApiTool(
                     return !!process.env[`BEARER_TOKEN_${schemeName.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`];
                 }
                 else if (scheme.scheme?.toLowerCase() === 'basic') {
+                    // Check for Smithery-mapped environment variables first
+                    if (process.env['BASIC_USERNAME_HTTPBASIC'] && process.env['BASIC_PASSWORD_HTTPBASIC']) {
+                        return true;
+                    }
+                    // Fall back to standard environment variables
                     return !!process.env[`BASIC_USERNAME_${schemeName.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`] && 
                            !!process.env[`BASIC_PASSWORD_${schemeName.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`];
                 }
@@ -749,8 +755,15 @@ async function executeApiTool(
                     }
                 } 
                 else if (scheme.scheme?.toLowerCase() === 'basic') {
-                    const username = process.env[`BASIC_USERNAME_${schemeName.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`];
-                    const password = process.env[`BASIC_PASSWORD_${schemeName.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`];
+                    let username = process.env['BASIC_USERNAME_HTTPBASIC'];
+                    let password = process.env['BASIC_PASSWORD_HTTPBASIC'];
+                    
+                    // Fall back to standard environment variables if not configured
+                    if (!username || !password) {
+                        username = process.env[`BASIC_USERNAME_${schemeName.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`];
+                        password = process.env[`BASIC_PASSWORD_${schemeName.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`];
+                    }
+                    
                     if (username && password) {
                         headers['authorization'] = `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`;
                         console.error(`Applied Basic authentication for '${schemeName}'`);
@@ -895,12 +908,24 @@ async function executeApiTool(
  * Main function to start the server
  */
 async function main() {
-// Set up StreamableHTTP transport
-  try {
-    await setupStreamableHttpServer(server, 3000);
-  } catch (error) {
-    console.error("Error setting up StreamableHTTP server:", error);
-    process.exit(1);
+  // Check command line arguments to determine transport
+  const args = process.argv.slice(2);
+  const transportIndex = args.findIndex(arg => arg === '--transport' || arg === '-t');
+  const transport = transportIndex !== -1 && args[transportIndex + 1] ? args[transportIndex + 1] : 'stdio';
+
+  if (transport === 'streamable-http') {
+    // Set up StreamableHTTP transport
+    try {
+      await setupStreamableHttpServer(server, 3000);
+    } catch (error) {
+      console.error("Error setting up StreamableHTTP server:", error);
+      process.exit(1);
+    }
+  } else {
+    // Default to stdio transport (for Smithery and standard MCP usage)
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+    console.error(`MCP server running on stdio transport`);
   }
 }
 

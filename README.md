@@ -3,7 +3,6 @@
 <!-- Badges -->
 ![Arsenal PAC](https://img.shields.io/badge/Arsenal%20PAC-⚙️-FF6B6B?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
-![GitHub Release](https://img.shields.io/github/v/release/ArsenalPAC/SwitchboardMCP?style=for-the-badge)
 ![Current Version](https://img.shields.io/github/package-json/v/ArsenalPAC/SwitchboardMCP?style=for-the-badge)
 
 [![smithery badge](https://smithery.ai/badge/@ArsenalPAC/switchboardmcp)](https://smithery.ai/server/@ArsenalPAC/switchboardmcp)
@@ -13,166 +12,166 @@
 ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white&style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white&style=for-the-badge)
 
-
 ## 🎯 Purpose
 
-A Model Context Protocol (MCP) server that enables AI assistants to access the [Switchboard](https://oneswitchboard.com) API for broadcast messaging, email campaigns, and contact management. Built to empower progressive campaigns with automated messaging infrastructure and voter outreach capabilities.
-
-Originally generated using [openapi-mcp-generator](https://github.com/harsha-iiiv/openapi-mcp-generator) with the [Switchboard OpenAPI specification](https://api.oneswitchboard.com/v1/docs).
+Model Context Protocol (MCP) server for the Switchboard API, enabling AI assistants to access broadcast messaging, email campaigns, and contact management capabilities.
 
 ## 🛠️ Features
 
-- 📱 **Broadcast Management**: List, view, and export broadcast campaigns for SMS outreach
-- 💰 **Email Blast Management**: List, view, and export email campaigns for fundraising and voter contact
-- 📧 **Contact Management**: Create and manage email addresses and phone numbers with full CRUD operations
-- 📊 **List Management**: Create and manage email/phone lists with CSV imports for rapid deployment
-- 🏷️ **Label Management**: Create, edit, and apply labels to organize contacts by district, issue, or campaign
-- 📤 **Export Functions**: Generate CSV exports of campaigns and contact data for compliance and analysis
-- ⚙️ **Job Monitoring**: Track the status of long-running export jobs in real-time
+- 📱 **SMS/MMS Broadcast Management**: List and manage text message campaigns
+- 📧 **Email Campaign Tools**: Handle email blasts and email list management  
+- 👥 **Contact Management**: Create and organize contacts with labels
+- 🏷️ **Label System**: Organize contacts with custom labels
+- 📊 **Export Capabilities**: Export campaign data for analysis
+- 🔐 **Secure Authentication**: HTTP Basic auth with account credentials
 
 ## ⚡ Quick Deploy
 
-### Prerequisites
-
-To use this MCP server, you need:
-
-1. A Switchboard account at [oneswitchboard.com](https://oneswitchboard.com)
-2. API credentials from your Switchboard organization settings
-
-### Getting Your API Credentials
-
-1. Log into your Switchboard account
-2. Navigate to **Organization Settings** → **API** tab
-3. Generate new API credentials
-4. Save your **Account ID** and **Secret Key** (you won't be able to access the Secret Key again)
-
-### Option 1: Via npm (Recommended)
-
-Install and run directly via npm:
+### Installation via Smithery
 
 ```bash
-npx switchboard-mcp-server
+npx -y @smithery/cli install @arsenalpac/switchboardmcp
 ```
 
-Or install globally:
+### Manual Installation
 
 ```bash
 npm install -g switchboard-mcp-server
-switchboard-mcp-server
 ```
 
-### Option 2: Via Smithery
+## 🔧 Configuration
 
-The easiest way to configure this server is through [Smithery](https://smithery.ai):
+### Required Credentials
 
-1. Visit the [Switchboard MCP Server on Smithery](https://smithery.ai/server/@ArsenalPAC/switchboardmcp)
-2. Click "Connect" and provide your Switchboard API credentials
-3. Copy the connection URL to use in your MCP client
+You'll need your Switchboard API credentials:
+- **Account ID**: Found at https://oneswitchboard.com/organization/settings?tab=api
+- **Secret Key**: Generated from the same settings page
 
-### Option 3: Local Development
+### MCP Client Configuration
 
-For local development or testing:
-
-1. Clone this repository
-2. Install dependencies: `npm install`
-3. Build the project: `npm run build`
-4. Set environment variables:
-   ```bash
-   export BASIC_USERNAME_HTTPBASIC="your_account_id"
-   export BASIC_PASSWORD_HTTPBASIC="your_secret_key"
-   ```
-5. Run the server:
-   - For stdio mode: `npm start`
-   - For HTTP mode: `npm run start:http`
-
-## 🔌 Integrations
-
-- **Switchboard API**: Full integration with broadcast messaging and contact management
-- **Claude Desktop**: Native MCP integration for AI-powered campaign automation
-- **CSV Import/Export**: Bulk operations for rapid campaign deployment
-- **Real-time Job Monitoring**: Track export progress and data processing
-
-## 🔐 Security Standards
-
-- **API Authentication**: Secure HTTP Basic Auth with Account ID and Secret Key
-- **Environment Variables**: Secure credential storage
-- **Data Validation**: Zod-based schema validation for all API operations
-- **Compliance Ready**: Built for FEC reporting requirements with full export capabilities
-
-## 💻 Tech Stack
-
-![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)
-![MCP SDK](https://img.shields.io/badge/MCP%20SDK-1.10.0-blue)
-![Zod](https://img.shields.io/badge/Zod-Validation-3E67B1)
-![Axios](https://img.shields.io/badge/Axios-HTTP-671DDF)
-![Hono](https://img.shields.io/badge/Hono-Server-E36002)
-
-## 🤖 Connecting to AI Clients
-
-### Claude Desktop
-
-Add this to your Claude Desktop configuration:
+Add to your MCP client configuration:
 
 ```json
 {
   "mcpServers": {
     "switchboard": {
       "command": "npx",
-      "args": ["switchboard-mcp-server"],
-      "env": {
-        "BASIC_USERNAME_HTTPBASIC": "your_account_id",
-        "BASIC_PASSWORD_HTTPBASIC": "your_secret_key"
+      "args": ["-y", "@arsenalpac/switchboardmcp"],
+      "config": {
+        "account_id": "ac_your_account_id_here",
+        "secret_key": "sk_your_secret_key_here"
       }
     }
   }
 }
 ```
 
-### Via Smithery URL
+### Environment Variables (Alternative)
 
-If using Smithery, add the connection URL from your Smithery dashboard to your MCP client.
+You can also set credentials via environment variables:
+```bash
+export BASIC_USERNAME_HTTPBASIC="ac_your_account_id"
+export BASIC_PASSWORD_HTTPBASIC="sk_your_secret_key"
+```
 
-## 🛠️ Available Tools
+## 🔌 Available Tools
 
-The server provides the following tools (auto-generated from Switchboard's OpenAPI spec):
-
-### Broadcast Tools
+### Broadcast Management
 - `list_broadcasts_v1_broadcasts_get` - List all broadcasts
-- `get_broadcast_v1_broadcasts__broadcast_id__get` - Get specific broadcast details
-- `export_broadcasts_v1_broadcasts_export_post` - Export broadcast data to CSV
+- `get_broadcast_v1_broadcasts__broadcast_id__get` - Get broadcast details
+- `export_broadcasts_v1_broadcasts_export_post` - Export broadcast data
+- `get_broadcast_phone_messages_v1_broadcasts__broadcast_id__phone_messages_get` - List messages in a broadcast
 
-### Email Blast Tools  
-- `list_email_blasts_v1_email_blasts_get` - List all email blasts
-- `get_email_blast_v1_email_blasts__blast_id__get` - Get specific email blast details
-- `export_blasts_v1_email_blasts_export_post` - Export email blast data to CSV
+### Email Campaign Management
+- `list_email_blasts_v1_email_blasts_get` - List email campaigns
+- `get_email_blast_v1_email_blasts__blast_id__get` - Get email blast details
+- `export_blasts_v1_email_blasts_export_post` - Export email blast data
 
-### Contact Management Tools
-- `list_emails_v1_emails_get` - List email addresses
-- `create_email_v1_emails_post` - Create new email address
-- `list_phones_v1_phones_get` - List phone numbers
-- `create_phone_v1_phones_post` - Create new phone number
+### Contact Management
+- `create_phone_v1_phones_post` - Add phone number contact
+- `create_email_v1_emails_post` - Add email contact
+- `list_phones_v1_phones_get` - List phone contacts
+- `list_emails_v1_emails_get` - List email contacts
 
-### Label Management Tools
-- `list_labels_v1_labels_get` - List all labels
-- `create_label_v1_labels_post` - Create new label
-- `get_label_v1_labels__label_id__get` - Get specific label
-- `edit_label_v1_labels__label_id__patch` - Edit existing label
-
-### List Management Tools
-- `create_email_list_v1_email_lists_post` - Create email list from CSV
-- `list_email_lists_v1_email_lists_get` - List all email lists
+### List Management
 - `create_phone_list_v1_phone_lists_post` - Create phone list from CSV
+- `create_email_list_v1_email_lists_post` - Create email list from CSV
 - `list_phone_lists_v1_phone_lists_get` - List all phone lists
+- `list_email_lists_v1_email_lists_get` - List all email lists
 
-### Export & Job Tools
-- `get_jobs_v1_jobs__get` - List export jobs
-- `get_job_v1_jobs__job_id__get` - Get job status and download URL
-- Various `*_export_*` tools for generating CSV exports
+### Label Management
+- `create_label_v1_labels_post` - Create new label
+- `list_labels_v1_labels_get` - List all labels
+- `update_labels_v1_phones_update_labels_post` - Update phone labels
+- `update_labels_v1_emails_update_labels_post` - Update email labels
 
-### Utility Tools
-- `whoami_v1_whoami_get` - Validate API credentials and permissions
+## 📋 Example Usage
 
+### List Recent Broadcasts
+```javascript
+// AI Assistant can run:
+await use_mcp_tool("switchboard", "list_broadcasts_v1_broadcasts_get", {});
+```
+
+### Create a New Contact
+```javascript
+// AI Assistant can run:
+await use_mcp_tool("switchboard", "create_phone_v1_phones_post", {
+  requestBody: JSON.stringify({
+    phone_number: "+12025551234",
+    first_name: "Jane",
+    last_name: "Doe",
+    label_names: ["Volunteer", "Donor"]
+  })
+});
+```
+
+### Export Campaign Data
+```javascript
+// AI Assistant can run:
+await use_mcp_tool("switchboard", "export_broadcasts_v1_broadcasts_export_post", {
+  requestBody: JSON.stringify({})
+});
+```
+
+## 🔐 Security Standards
+
+- **API Authentication**: Secure HTTP Basic authentication
+- **Data Protection**: All communications use HTTPS
+- **Credential Storage**: Never commit credentials to version control
+- **Access Control**: API keys are scoped to organization level
+
+## 💻 Development
+
+### Local Development
+```bash
+# Clone the repository
+git clone https://github.com/ArsenalPAC/SwitchboardMCP.git
+cd SwitchboardMCP
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+
+# Run locally
+npm start
+```
+
+### Testing with MCP Inspector
+```bash
+# Use the MCP Inspector to test the server
+npx @modelcontextprotocol/inspector
+```
+
+## 🤝 Contributing
+
+Arsenal PAC welcomes contributions! Please feel free to submit a Pull Request.
+
+## 🏛️ Political Disclaimer
+
+Paid for by [Arsenal PAC](https://arsenaldemocracy.org) and is not authorized by any candidate or candidate's committee.
 
 ## 📧 Support
 
@@ -187,11 +186,3 @@ The server provides the following tools (auto-generated from Switchboard's OpenA
 ## ⚖️ License & Compliance
 
 Licensed under MIT License.
-
-## 🤝 Contributing
-
-Arsenal PAC welcomes contributions! Please feel free to submit a Pull Request.
-
-## 🏛️ Political Disclaimer
-
-Paid for by [Arsenal PAC](https://arsenaldemocracy.org) and is not authorized by any candidate or candidate's committee.
